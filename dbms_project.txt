@@ -1,0 +1,227 @@
+create table showroom(
+    showroom_id number primary key,
+	location varchar(50) ,
+	manager_id number
+	--foreign key (manager_id) references employees (emp_id) 
+);
+
+create table car(
+    	car_id number primary key ,		
+		model varchar(50),
+		manu_year number ,
+		color varchar(30),
+		price number ,
+    	fule_type varchar(10),
+		avaliable varchar(3),
+		showroom_id number,
+		foreign key (showroom_id) references showroom
+);
+
+create table customer(
+    cust_id number constraint pk_custid primary key ,
+    cust_name varchar(20),
+    cust_email varchar(50) constraint ck_cust_email  CHECK (cust_email LIKE '%@%'),
+    cust_phone number(10),
+    address varchar (50)
+);
+
+CREATE TABLE payment (
+    payment_id NUMBER PRIMARY KEY,
+    payment_type VARCHAR(30),
+    cust_id NUMBER,
+    car_id NUMBER,
+    description VARCHAR(30),
+    status VARCHAR(10),
+    payment_amt NUMBER(30,4),
+    FOREIGN KEY (cust_id) REFERENCES customer,
+    FOREIGN KEY (car_id) REFERENCES car
+);
+create table sale(
+    shale_id number primary key,
+    cust_id number ,
+    payment_id number ,
+    sale_dt date ,
+    sale_price number(35,4),
+    car_id number ,
+    foreign key (car_id) references car,
+    foreign key (cust_id) references customer,
+    foreign key (payment_id) references payment
+);
+
+create table srevice_history(
+    serhist_id number primary key,
+    ser_date date,
+    desription varchar2(100),
+    car_id number ,
+    foreign key (car_id) references car
+);
+CREATE TABLE car_catalog (
+    car_id NUMBER,
+    price NUMBER(35,4),
+    quantity NUMBER,
+    showroom_id NUMBER, -- Add data type specification here
+    PRIMARY KEY (car_id, showroom_id),
+    FOREIGN KEY (car_id) REFERENCES car,
+    FOREIGN KEY (showroom_id) REFERENCES showroom
+);
+
+
+
+create table employees(
+    empid number primary key,
+    ename varchar(20),
+    email varchar2(50) constraint ck_email  CHECK (email LIKE '%@%'),
+    phone number (10),
+    position varchar(20),
+    showroom_id number ,
+    hire_date date ,
+    foreign key (showroom_id) references showroom 
+);
+
+
+
+create table service_request(
+    ser_id number primary key  ,
+    cust_id number ,
+    car_id number ,
+    sataus varchar(10),
+    ser_date date,
+    foreign key (cust_id ) references customer ,
+    foreign key (car_id  ) references car 
+);
+
+
+
+
+
+INSERT INTO showroom VALUES (1, 'New York', 101);
+INSERT INTO showroom VALUES (2, 'Los Angeles', 102);
+INSERT INTO showroom VALUES (3, 'Chicago', 103);
+
+
+-- Inserting values into 'car' table
+INSERT INTO car VALUES (1, 'Corolla', 2021, 'Red', 25000, 'Petrol', 'Yes', 1);
+INSERT INTO car VALUES (2, 'Mustang', 2020, 'Blue', 35000, 'Petrol', 'Yes', 2);
+INSERT INTO car VALUES (3, 'Civic', 2022, 'Silver', 22000, 'Petrol', 'Yes', 3);
+INSERT INTO car VALUES (4, 'X5', 2019, 'Black', 40000, 'Diesel', 'Yes', 1);
+INSERT INTO car VALUES (5, 'C-Class', 2020, 'White', 55000, 'Petrol', 'Yes', 2);
+
+-- Inserting values into 'showroom' table
+
+
+-- Inserting values into 'sale' table
+INSERT INTO sale VALUES (1, 1, 1, TO_DATE('2024-04-01', 'YYYY-MM-DD'), 25000, 1);
+INSERT INTO sale VALUES (2, 2, 2, TO_DATE('2024-04-02', 'YYYY-MM-DD'), 35000, 2);
+INSERT INTO sale VALUES (3, 3, 3, TO_DATE('2024-04-03', 'YYYY-MM-DD'), 22000, 3);
+INSERT INTO sale VALUES (4, 4, 4, TO_DATE('2024-04-04', 'YYYY-MM-DD'), 40000, 4);
+INSERT INTO sale VALUES (5, 5, 5, TO_DATE('2024-04-05', 'YYYY-MM-DD'), 55000, 5);
+
+-- Inserting values into 'srevice_history' table
+INSERT INTO srevice_history VALUES (1, TO_DATE('2024-04-01', 'YYYY-MM-DD'), 'Service completed for Corolla', 1);
+INSERT INTO srevice_history VALUES (2, TO_DATE('2024-04-02', 'YYYY-MM-DD'), 'Service pending for Mustang', 2);
+INSERT INTO srevice_history VALUES (3, TO_DATE('2024-04-03', 'YYYY-MM-DD'), 'Service completed for Civic', 3);
+INSERT INTO srevice_history VALUES (4, TO_DATE('2024-04-04', 'YYYY-MM-DD'), 'Service pending for X5', 4);
+INSERT INTO srevice_history VALUES (5, TO_DATE('2024-04-05', 'YYYY-MM-DD'), 'Service completed for C-Class', 5);
+INSERT INTO srevice_history VALUES (6, TO_DATE('2024-04-05', 'YYYY-MM-DD'), 'Service completed for C-Class', 2);
+
+-- Inserting values into 'car_catalog' table
+INSERT INTO car_catalog VALUES (1,  25000, 5,1);
+INSERT INTO car_catalog VALUES (2, 35000, 5,1);
+INSERT INTO car_catalog VALUES (3,  22000, 5,1);
+INSERT INTO car_catalog VALUES (4,  40000, 5,1);
+INSERT INTO car_catalog VALUES (5,  55000, 5,1);
+
+-- Inserting values into 'employees' table
+INSERT INTO employees VALUES (101, 'John Doe', 'john.doe@example.com', 1234567890, 'Manager', 1, TO_DATE('2022-01-15', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (102, 'Jane Smith', 'jane.smith@example.com', 2345678901, 'Sales Associate', 2, TO_DATE('2022-02-20', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (103, 'Michael Johnson', 'michael.johnson@example.com', 3456789012, 'Sales Associate', 3, TO_DATE('2022-03-25', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (104, 'Emily Brown', 'emily.brown@example.com', 4567890123, 'Manager', 1, TO_DATE('2022-04-30', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES (105, 'Daniel Wilson', 'daniel.wilson@example.com', 5678901234, 'Sales Associate', 2, TO_DATE('2022-05-05', 'YYYY-MM-DD'));
+
+-- Inserting values into 'customer' table
+INSERT INTO customer VALUES (1, 'Alice Johnson', 'alice.johnson@example.com', 1112223333, '123 Main St, Anytown, USA');
+INSERT INTO customer VALUES (2, 'Bob Smith', 'bob.smith@example.com', 2223334444, '456 Elm St, Othertown, USA');
+INSERT INTO customer VALUES (3, 'Charlie Brown', 'charlie.brown@example.com', 3334445555, '789 Oak St, Anycity, USA');
+INSERT INTO customer VALUES (4, 'Diana Martinez', 'diana.martinez@example.com', 4445556666, '101 Pine St, Anothercity, USA');
+INSERT INTO customer VALUES (5, 'Eva Wilson', 'eva.wilson@example.com', 5556667777, '202 Cedar St, Anystate, USA');
+
+-- Inserting values into 'service_request' table
+INSERT INTO service_request VALUES (1, 1, 1, 'complete', TO_DATE('2024-04-01', 'YYYY-MM-DD'));
+INSERT INTO service_request VALUES (2, 2, 2, 'pending', TO_DATE('2024-04-02', 'YYYY-MM-DD'));
+INSERT INTO service_request VALUES (3, 3, 3, 'complete', TO_DATE('2024-04-03', 'YYYY-MM-DD'));
+INSERT INTO service_request VALUES (4, 4, 4, 'pending', TO_DATE('2024-04-04', 'YYYY-MM-DD'));
+INSERT INTO service_request VALUES (5, 5, 5, 'complete', TO_DATE('2024-04-05', 'YYYY-MM-DD'));
+
+-- Inserting values into 'payment' table
+INSERT INTO payment VALUES (1, 'Credit Card', 1, 1, 'Payment for Corolla','complete',400000000);
+INSERT INTO payment VALUES (2, 'Cash', 2, 2, 'Payment for Mustang','pending',100000000000);
+INSERT INTO payment VALUES (3, 'Debit Card', 3, 3, 'Payment for Civic','pending',5246000);
+INSERT INTO payment VALUES (4, 'Credit Card', 4, 4, 'Payment for X5','complete',5333333);
+INSERT INTO payment VALUES (5, 'Cash', 5, 5, 'Payment for C-Class','complete',8523694000);
+select * from service_request;
+select * from srevice_history;
+delete from srevice_history;
+
+CREATE OR REPLACE TRIGGER t1 
+    AFTER update ON service_request 
+    FOR EACH ROW
+DECLARE
+    req_status VARCHAR(10);
+	sr number ;
+BEGIN
+    IF updating THEN
+        req_status := :NEW.sataus;
+    END IF;
+
+    IF req_status = 'complete' THEN
+        sr := :old.ser_id;
+    INSERT INTO srevice_history  VALUES (sr, SYSDATE, 'Service completed', :NEW.car_id);
+
+	--delete from service_request where ser_id = sr;
+    END IF;
+END t1;
+/
+
+    update service_request set sataus ='complete'
+    where ser_id =2;
+
+
+
+
+select * from ;
+select * from srevice_history  ;
+
+create or replace trigger t2 after update on payment 
+    for each row
+declare 
+carid payment.car_id%type;
+qty number ;
+status_s varchar(30);
+
+begin 
+
+if updating then 
+status_s := :new.status;
+end if;
+
+ select quantity  into qty from car_catalog where car_id = :old.car_id;
+
+
+if status_s= 'complete' then 
+    update car_catalog set quantity  = qty-1
+    where car_id = :old.car_id;
+end if;
+
+end t2;
+/
+
+ update payment set status ='complete'
+    where  payment_id =2;
+select * from car_catalog;
+
+
+--Function to Calculate Total Sales for a Showroom:
+--Procedure to Update Employee Position:
+--Function to Calculate Total Revenue by Showroom:
+--Function to Retrieve Available Cars in a Showroom:
+--Procedure to Add a New Customer:
